@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <title>Trò chơi chiếc nón kỳ diệu</title>
+    <style>
+      :root {
+        --bg: #fffbea;
+        --card: #fff9e6;
+        --accent: #fbbf24;
+        --muted: #555;
+        --btn: #fef3c7;
+        font-family: Inter, system-ui, Arial;
+      }
+      body {
+        margin: 0;
+        min-height: 100vh;
+        background: linear-gradient(180deg, #fffdf5, #fff9e6);
+        color: #333;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 24px;
+      }
+      .app {
+        width: 80%;
+        max-width: 1280px;
+        background: var(--card);
+        border-radius: 12px;
+        padding: 20px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      }
+      header {
+        position: relative;
+        text-align: center;
+        margin-bottom: 12px;
+      }
+      header h1 {
+        font-size: 36px;
+        margin: 0;
+        color: var(--accent);
+      }
+      header .logo {
+        position: absolute;
+        left: 10px;
+        top: 100%;
+        transform: translateY(-50%);
+        height: 150px;
+      }
+      p.lead {
+        text-align: center;
+        margin: 4px 0 20px 0;
+        color: var(--muted);
+      }
+      .board {
+        display: grid;
+        grid-template-columns: 1fr 360px;
+        gap: 18px;
+      }
+      .left,
+      .right {
+        padding: 14px;
+        border-radius: 8px;
+      }
+      .left {
+        background: white;
+      }
+      .right {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .puzzle {
+        min-height: 120px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+      .cell {
+        width: 52px;
+        height: 52px;
+        border-radius: 8px;
+        background: #fde68a;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 20px;
+        letter-spacing: 2px;
+      }
+      .cell.hidden {
+        background: #fcd34d;
+        border: 2px dashed #eab308;
+      }
+      .cell.revealed {
+        background: var(--accent);
+        color: #fff;
+      }
+      .cell.space {
+        width: 20px;
+        background: transparent;
+        border: none;
+      }
+      .alphabet {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+      .letter {
+        min-width: 40px;
+        height: 40px;
+        border-radius: 8px;
+        background: var(--accent);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        font-weight: 700;
+        color: #fff;
+        border: none;
+      }
+      .letter.disabled {
+        opacity: 0.3;
+        cursor: not-allowed;
+      }
+      .controls {
+        margin-top: 20px;
+        display: flex;
+        justify-content: center;
+        gap: 16px;
+      }
+      button.control {
+        background: var(--accent);
+        border: none;
+        padding: 14px 24px;
+        border-radius: 10px;
+        color: #fff;
+        font-weight: 600;
+        cursor: pointer;
+        font-size: 18px;
+      }
+      button.control:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+      }
+      #hintSection {
+        margin-top: 20px;
+        text-align: center;
+      }
+      #hintText {
+        font-size: 22px;
+        color: #333;
+        margin-bottom: 12px;
+      }
+      #hintImg {
+        max-width: 500px;
+        border-radius: 8px;
+      }
+      #winMsg {
+        display: none;
+        font-size: 48px;
+        font-weight: bold;
+        color: green;
+        text-align: center;
+        margin: 20px 0;
+        position: relative; /* để firework bám vào chữ */
+        animation: popIn 0.6s ease forwards;
+      }
+      @keyframes popIn {
+        0% {
+          transform: scale(0.3);
+          opacity: 0;
+        }
+        80% {
+          transform: scale(1.2);
+          opacity: 1;
+        }
+        100% {
+          transform: scale(1);
+        }
+      }
+      .fireworks {
+        position: absolute; /* overlay thay vì chiếm chỗ */
+        width: 200%;
+        top: 50%;
+        left: 0;
+        height: 0;
+        pointer-events: none;
+      }
+
+      .fireworks .fw {
+        position: absolute;
+        width: 60px;
+        opacity: 0;
+      }
+
+      #fwLeft {
+        left: 10%;
+      }
+      #fwRight {
+        right: 60%;
+      }
+      @keyframes fireworkUp {
+        0% {
+          transform: translateY(20px) scale(0.3);
+          opacity: 0;
+        }
+        50% {
+          opacity: 1;
+        }
+        100% {
+          transform: translateY(-80px) scale(2);
+          opacity: 0;
+        }
+      }
+      footer {
+        margin-top: 12px;
+        color: var(--muted);
+        font-size: 12px;
+        text-align: center;
+      }
+      @media (max-width: 880px) {
+        .board {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app">
+      <header>
+        <img src="./image/logo.png" alt="Logo" class="logo" />
+        <h1>Trò chơi Chiếc nón kỳ diệu</h1>
+      </header>
+      <p class="lead">Chọn chữ cái để đoán từ khóa về tester</p>
+
+      <div class="board">
+        <section class="left">
+          <div class="puzzle" id="puzzle"></div>
+
+          <div class="status">
+            <div>
+              Câu hỏi: <strong id="wordIndex">1</strong>/<span id="totalWords"
+                >1</span
+              >
+            </div>
+            <div class="misses">Sai: <strong id="missCount">0</strong></div>
+            <div id="winMsg">
+              🎉 Chính xác!
+              <div class="fireworks">
+                <img
+                  src="./image/phaohoa.png"
+                  alt="pháo hoa trái"
+                  id="fwLeft"
+                  class="fw"
+                />
+                <img
+                  src="./image/phaohoa.png"
+                  alt="pháo hoa phải"
+                  id="fwRight"
+                  class="fw"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div id="hintSection">
+            <div id="hintText" class="fs-1"></div>
+            <img id="hintImg" src="" alt="hint image" />
+          </div>
+
+          <div class="controls">
+            <button class="control" id="prevBtn">Prev</button>
+            <button class="control" id="revealBtn">Reveal</button>
+            <button class="control" id="nextBtn">Next</button>
+          </div>
+        </section>
+
+        <aside class="right">
+          <div class="alphabet" id="alphabet"></div>
+        </aside>
+      </div>
+
+      <footer>
+        <span class="fs-4">https://codefarm.edu.vn</span>
+      </footer>
+    </div>
+
+    <script>
+      const DEFAULT_PUZZLES = [
+        {
+          word: "BUG",
+          question: "Đây là từ thể hiện lỗi phần mềm",
+          img: "./image/test.jpg",
+        },
+        {
+          word: "TEST CASE",
+          question: "Tài liệu mô tả chi tiết từng bước kiểm thử gọi là gì?",
+          img: "./image/test.jpg",
+        },
+        {
+          word: "AUTOMATION",
+          question: "Kiểm thử bằng công cụ thay vì thủ công gọi là gì?",
+          img: "./image/test.jpg",
+        },
+        {
+          word: "MANUAL",
+          question: "Hình thức kiểm thử do con người trực tiếp thực hiện?",
+          img: "./image/test.jpg",
+        },
+        {
+          word: "REGRESSION",
+          question: "Kiểm thử lại sau khi sửa lỗi hoặc thay đổi phần mềm?",
+          img: "./image/test.jpg",
+        },
+        {
+          word: "UNIT",
+          question: "Mức kiểm thử nhỏ nhất, tập trung vào hàm hoặc module?",
+          img: "./image/test.jpg",
+        },
+        {
+          word: "INTEGRATION",
+          question: "Kiểm thử khi kết hợp nhiều module lại với nhau?",
+          img: "./image/test.jpg",
+        },
+        {
+          word: "SMOKE",
+          question: "Kiểm thử nhanh để xem phần mềm có chạy cơ bản không?",
+          img: "./image/test.jpg",
+        },
+        {
+          word: "PERFORMANCE",
+          question: "Kiểm thử về tốc độ và khả năng chịu tải?",
+          img: "./image/test.jpg",
+        },
+        {
+          word: "UI",
+          question: "Phần giao diện người dùng viết tắt là gì?",
+          img: "./image/test.jpg",
+        },
+      ];
+
+      const ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+
+      function normalizeForMatch(ch) {
+        return ch ? ch.toUpperCase() : ch;
+      }
+      function isLetter(ch) {
+        return /[A-Z]/i.test(ch);
+      }
+
+      let puzzles = DEFAULT_PUZZLES;
+      let idx = 0;
+      let chars = [];
+      let missCount = 0;
+
+      const alphabetEl = document.getElementById("alphabet");
+      function renderAlphabet() {
+        alphabetEl.innerHTML = "";
+        ALPHABET.forEach((letter) => {
+          const btn = document.createElement("button");
+          btn.className = "letter";
+          btn.textContent = letter;
+          btn.dataset.letter = letter;
+          btn.addEventListener("click", onLetterClick);
+          alphabetEl.appendChild(btn);
+        });
+      }
+
+      function loadPuzzle(i) {
+        idx = (i + puzzles.length) % puzzles.length;
+        document.getElementById("wordIndex").textContent = idx + 1;
+        document.getElementById("totalWords").textContent = puzzles.length;
+        buildChars(puzzles[idx].word);
+        missCount = 0;
+        document.getElementById("missCount").textContent = missCount;
+        resetAlphabetButtons();
+        renderPuzzle();
+        document.getElementById("winMsg").style.display = "none";
+        document.getElementById("hintText").textContent = puzzles[idx].question;
+        document.getElementById("hintImg").src = puzzles[idx].img;
+
+        const prevBtn = document.getElementById("prevBtn");
+        const nextBtn = document.getElementById("nextBtn");
+        if (prevBtn) prevBtn.disabled = idx === 0;
+        if (nextBtn) nextBtn.disabled = true; // mặc định khóa, chỉ mở khi win/reveal
+        if (idx === puzzles.length - 1) nextBtn.disabled = true;
+      }
+
+      function buildChars(raw) {
+        chars = [];
+        for (const ch of raw) {
+          chars.push({
+            orig: ch,
+            normalized: normalizeForMatch(ch),
+            revealed: !isLetter(ch),
+          });
+        }
+      }
+
+      function renderPuzzle() {
+        const el = document.getElementById("puzzle");
+        el.innerHTML = "";
+        chars.forEach((c) => {
+          const d = document.createElement("div");
+          d.className = "cell " + (c.revealed ? "revealed" : "hidden");
+          if (!isLetter(c.orig) && c.orig === " ") d.className = "cell space";
+          if (c.revealed && isLetter(c.orig)) d.textContent = c.orig;
+          el.appendChild(d);
+        });
+        checkWin();
+      }
+
+      function resetAlphabetButtons() {
+        document.querySelectorAll(".letter").forEach((b) => {
+          b.classList.remove("disabled");
+          b.disabled = false;
+        });
+      }
+
+      function onLetterClick(e) {
+        const btn = e.currentTarget;
+        if (btn.classList.contains("disabled")) return;
+        const letter = btn.dataset.letter;
+        handleGuess(letter);
+        btn.classList.add("disabled");
+        btn.disabled = true;
+      }
+
+      function handleGuess(letter) {
+        const key = normalizeForMatch(letter);
+        let found = 0;
+        chars.forEach((c) => {
+          if (isLetter(c.orig) && !c.revealed && c.normalized === key) {
+            c.revealed = true;
+            found++;
+          }
+        });
+        if (found === 0) {
+          missCount++;
+          document.getElementById("missCount").textContent = missCount;
+        } else {
+          renderPuzzle();
+        }
+      }
+
+      function checkWin() {
+        if (chars.every((c) => !isLetter(c.orig) || c.revealed)) {
+          const winMsg = document.getElementById("winMsg");
+          winMsg.style.display = "block";
+
+          // pháo hoa
+          const fwLeft = document.getElementById("fwLeft");
+          const fwRight = document.getElementById("fwRight");
+          fwLeft.style.display = "block";
+          fwRight.style.display = "block";
+          fwLeft.style.animation = "none";
+          fwRight.style.animation = "none";
+          void fwLeft.offsetWidth;
+          void fwRight.offsetWidth;
+          fwLeft.style.animation = "fireworkUp 1s ease-out forwards";
+          fwRight.style.animation = "fireworkUp 1s ease-out forwards";
+
+          if (idx < puzzles.length - 1) {
+            document.getElementById("nextBtn").disabled = false;
+          }
+        }
+      }
+
+      document.getElementById("revealBtn").addEventListener("click", () => {
+        chars.forEach((c) => {
+          if (isLetter(c.orig)) c.revealed = true;
+        });
+        renderPuzzle();
+        if (idx < puzzles.length - 1) {
+          document.getElementById("nextBtn").disabled = false;
+        }
+      });
+
+      document.getElementById("nextBtn").addEventListener("click", () => {
+        loadPuzzle(idx + 1);
+      });
+
+      document.getElementById("prevBtn").addEventListener("click", () => {
+        loadPuzzle(idx - 1);
+      });
+
+      document.addEventListener("keydown", (ev) => {
+        const k = ev.key.toUpperCase();
+        const btn = Array.from(document.querySelectorAll(".letter")).find(
+          (b) => b.textContent === k && !b.disabled
+        );
+        if (btn) btn.click();
+      });
+
+      renderAlphabet();
+      loadPuzzle(0);
+    </script>
+  </body>
+</html>
