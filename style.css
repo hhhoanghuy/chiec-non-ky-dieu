@@ -123,8 +123,8 @@
 
       /* ===== BOARD ===== */
       .board {
-        display: grid;
-        grid-template-columns: 1fr 420px;
+        display: flex;
+        flex-direction: column;
         gap: 18px;
         align-items: start;
       }
@@ -138,7 +138,6 @@
 
       /* ===== PUZZLE CELLS (tăng kích thước) ===== */
       .puzzle {
-        min-height: 150px;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -288,7 +287,7 @@
       .alphabet {
         width: 100%;
         display: grid;
-        grid-template-columns: repeat(6, minmax(56px, 1fr));
+        grid-template-columns: repeat(13, minmax(56px, 1fr));
         gap: 10px;
         justify-items: center;
       }
