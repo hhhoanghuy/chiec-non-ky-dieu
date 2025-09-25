@@ -51,21 +51,32 @@ const DEFAULT_PUZZLES = [
   },
 ];
 // CONFIG AUDIO
-const playList = ["./musics/calm2.mp3", "./muscis/calm3.mp3"];
+const playList = [
+  "https://res.cloudinary.com/dpplfiyki/video/upload/v1758789991/calm2_simwji.mp3",
+  "https://res.cloudinary.com/dpplfiyki/video/upload/v1758789991/calm3_mqmnmj.mp3",
+];
 let audio = new Audio();
 let currentIndex = 0;
 audio.preload = "auto";
-// FUNCTION PLAY MUSIC
+
 function playMusic() {
   audio.src = playList[currentIndex];
-  audio.play().catch((err) => console.error("khong phat duoc", err));
+  audio.play().catch((err) => console.error("không phát được", err));
 }
-playMusic();
-// ADD EVENT END MUSIC CREATING LOOP NEXT AND PREV MUSIC
+
 audio.addEventListener("ended", () => {
   currentIndex = (currentIndex + 1) % playList.length;
   playMusic();
 });
+
+document.getElementById("startBtn").addEventListener("click", () => {
+  playMusic();
+  document.getElementById("overlay-start").style.display = "none"; // ẩn nút sau khi phát
+});
+
+document.getElementById('stopBtn').addEventListener('click',()=>{
+  document.getElementById('overlay-start').style.display = 'none'
+})
 
 const ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
 function normalizeForMatch(ch) {
