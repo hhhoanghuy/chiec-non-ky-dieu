@@ -1,53 +1,54 @@
 const DEFAULT_PUZZLES = [
   {
     word: "BUG",
-    question: "Đây là từ thể hiện lỗi phần mềm",
-    img: "./image/test.jpg",
+    question: " Lỗi hoặc sự cố trong phần mềm gọi là gì?",
+    img: "./image/UNIT.gif",
   },
   {
     word: "TEST CASE",
-    question: "Tài liệu mô tả chi tiết từng bước kiểm thử gọi là gì?",
-    img: "./image/test.jpg",
+    question:
+      "Tài liệu mô tả bước test, dữ liệu và kết quả mong đợi gọi là gì?",
+    img: "./image/UNIT_2.gif",
   },
   {
     word: "AUTOMATION",
-    question: "Kiểm thử bằng công cụ thay vì thủ công gọi là gì?",
-    img: "./image/test.jpg",
+    question: "Kiểm thử bằng công cụ, script tự động gọi là gì?",
+    img: "./image/UNIT_3.gif",
   },
   {
-    word: "MANUAL",
-    question: "Hình thức kiểm thử do con người trực tiếp thực hiện?",
-    img: "./image/test.jpg",
+    word: "MANUAL TESING",
+    question: "Kiểm thử do tester thực hiện thủ công gọi là gì?",
+    img: "./image/UNIT_4.gif",
   },
   {
-    word: "REGRESSION",
-    question: "Kiểm thử lại sau khi sửa lỗi hoặc thay đổi phần mềm?",
-    img: "./image/test.jpg",
+    word: "REGRESSION TESTING",
+    question: "Kiểm thử lại sau khi sửa lỗi hoặc thay đổi phần mềm gọi là gì?",
+    img: "./image/UNIT_5.gif",
   },
   {
-    word: "UNIT",
-    question: "Mức kiểm thử nhỏ nhất, tập trung vào hàm hoặc module?",
-    img: "./image/test.jpg",
+    word: "UNIT TESTING",
+    question: "Mức kiểm thử nhỏ nhất, tập trung vào hàm/module gọi là gì?",
+    img: "./image/UNIT_6.gif",
   },
   {
-    word: "INTEGRATION",
-    question: "Kiểm thử khi kết hợp nhiều module lại với nhau?",
-    img: "./image/test.jpg",
+    word: "INTEGRATION TESTING",
+    question: "Kiểm thử khi các module được kết hợp với nhau gọi là gì?",
+    img: "./image/UNIT_7.gif",
   },
   {
     word: "SMOKE",
     question: "Kiểm thử nhanh để xem phần mềm có chạy cơ bản không?",
-    img: "./image/test.jpg",
+    img: "./image/UNIT_8.gif",
   },
   {
-    word: "PERFORMANCE",
-    question: "Kiểm thử về tốc độ và khả năng chịu tải?",
-    img: "./image/test.jpg",
+    word: "PERFORMANCE TESTING",
+    question: "Kiểm thử tốc độ, tải và hiệu năng hệ thống gọi là gì?",
+    img: "./image/UNIT_9.gif",
   },
   {
-    word: "UI",
-    question: "Phần giao diện người dùng viết tắt là gì?",
-    img: "./image/test.jpg",
+    word: "USER INTERFACE",
+    question: "Phần giao diện người dùng được viết tắt là gì?",
+    img: "./image/UNIT_10.gif",
   },
 ];
 // CONFIG AUDIO
@@ -74,9 +75,9 @@ document.getElementById("startBtn").addEventListener("click", () => {
   document.getElementById("overlay-start").style.display = "none"; // ẩn nút sau khi phát
 });
 
-document.getElementById('stopBtn').addEventListener('click',()=>{
-  document.getElementById('overlay-start').style.display = 'none'
-})
+document.getElementById("stopBtn").addEventListener("click", () => {
+  document.getElementById("overlay-start").style.display = "none";
+});
 
 const ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
 function normalizeForMatch(ch) {
@@ -272,13 +273,12 @@ function positionCFPanels() {
   const top = window.scrollY + rect.top;
   const leftX = window.scrollX + rect.left - gap - panelW;
   const rightX = window.scrollX + rect.right + gap;
-  const h = rect.height;
   left.style.top = `${top}px`;
   left.style.left = `${leftX}px`;
-  left.style.height = `${h}px`;
+  left.style.height = `${900}px`;
   right.style.top = `${top}px`;
   right.style.left = `${rightX}px`;
-  right.style.height = `${h}px`;
+  right.style.height = `${900}px`;
 }
 window.addEventListener("resize", positionCFPanels);
 window.addEventListener("scroll", positionCFPanels, { passive: true });
