@@ -50,6 +50,22 @@ const DEFAULT_PUZZLES = [
     img: "./image/test.jpg",
   },
 ];
+// CONFIG AUDIO
+const playList = ["./musics/calm2.mp3", "./muscis/calm3.mp3"];
+let audio = new Audio();
+let currentIndex = 0;
+audio.preload = "auto";
+// FUNCTION PLAY MUSIC
+function playMusic() {
+  audio.src = playList[currentIndex];
+  audio.play().catch((err) => console.error("khong phat duoc", err));
+}
+playMusic();
+// ADD EVENT END MUSIC CREATING LOOP NEXT AND PREV MUSIC
+audio.addEventListener("ended", () => {
+  currentIndex = (currentIndex + 1) % playList.length;
+  playMusic();
+});
 
 const ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
 function normalizeForMatch(ch) {
