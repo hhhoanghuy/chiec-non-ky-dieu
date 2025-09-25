@@ -2,32 +2,32 @@ const DEFAULT_PUZZLES = [
   {
     word: "BUG",
     question: "Đây là từ thể hiện lỗi phần mềm",
-    img: "./public/image/test.jpg",
+    img: "./image/test.jpg",
   },
   {
     word: "TEST CASE",
     question: "Tài liệu mô tả chi tiết từng bước kiểm thử gọi là gì?",
-    img: "./public/image/test.jpg",
+    img: "./image/test.jpg",
   },
   {
     word: "AUTOMATION",
     question: "Kiểm thử bằng công cụ thay vì thủ công gọi là gì?",
-    img: "./public/image/test.jpg",
+    img: "./image/test.jpg",
   },
   {
     word: "MANUAL",
     question: "Hình thức kiểm thử do con người trực tiếp thực hiện?",
-    img: "./public/image/test.jpg",
+    img: "./image/test.jpg",
   },
   {
     word: "REGRESSION",
     question: "Kiểm thử lại sau khi sửa lỗi hoặc thay đổi phần mềm?",
-    img: "./public/image/test.jpg",
+    img: "./image/test.jpg",
   },
   {
     word: "UNIT",
     question: "Mức kiểm thử nhỏ nhất, tập trung vào hàm hoặc module?",
-    img: "./public/image/test.jpg",
+    img: "./image/test.jpg",
   },
   {
     word: "INTEGRATION",
@@ -42,16 +42,16 @@ const DEFAULT_PUZZLES = [
   {
     word: "PERFORMANCE",
     question: "Kiểm thử về tốc độ và khả năng chịu tải?",
-    img: "./public/image/test.jpg",
+    img: "./image/test.jpg",
   },
   {
     word: "UI",
     question: "Phần giao diện người dùng viết tắt là gì?",
-    img: "./public/image/test.jpg",
+    img: "./image/test.jpg",
   },
 ];
 // CONFIG AUDIO
-const playList = ["./public/musics/calm2.mp3", "./public/muscis/calm3.mp3"];
+const playList = ["./musics/calm2.mp3", "./muscis/calm3.mp3"];
 let audio = new Audio();
 let currentIndex = 0;
 audio.preload = "auto";
